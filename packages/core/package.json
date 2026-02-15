@@ -12,6 +12,8 @@
     }
   },
   "scripts": {
+    "postinstall": "prisma generate",
+    "prebuild": "prisma generate",
     "build": "tsc",
     "dev": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
