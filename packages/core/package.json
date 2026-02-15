@@ -1,0 +1,41 @@
+{
+  "name": "@daiwanmaru/core",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "prisma": {
+    "seed": "tsx seed.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.33",
+    "@types/uuid": "^11.0.0",
+    "dotenv": "^17.3.1",
+    "prisma": "^5.22.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.990.0",
+    "@aws-sdk/s3-request-presigner": "^3.990.0",
+    "@prisma/client": "^5.22.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.36.2",
+    "uuid": "^13.0.0"
+  }
+}

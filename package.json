@@ -1,0 +1,22 @@
+{
+  "name": "daiwanmaru-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daiwanmaru Tools Monorepo",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "tsx": "^4.21.0",
+    "turbo": "^2.8.7",
+    "typescript": "^5.9.3"
+  }
+}
