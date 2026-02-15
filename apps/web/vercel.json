@@ -1,0 +1,4 @@
+{
+    "buildCommand": "cd ../.. && pnpm install && pnpm turbo build --filter=@daiwanmaru/core && cd apps/web && pnpm run build",
+    "installCommand": "pnpm install --filter=web --filter=@daiwanmaru/core..."
+}
