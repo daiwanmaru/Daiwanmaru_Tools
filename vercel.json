@@ -1,0 +1,6 @@
+{
+    "buildCommand": "pnpm turbo build --filter=web",
+    "installCommand": "pnpm install && pnpm turbo build --filter=@daiwanmaru/core",
+    "framework": null,
+    "outputDirectory": "apps/web/.next"
+}
