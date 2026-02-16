@@ -2,7 +2,7 @@ import { prisma } from './db/index.js';
 
 export async function getAllTools() {
     const tools = await prisma.tool.findMany();
-    return tools.map(tool => ({
+    return tools.map((tool: any) => ({
         ...tool,
         paramsDefine: tool.paramsDefine ? JSON.parse(tool.paramsDefine as string) : null,
     }));
