@@ -1,5 +1,4 @@
 {
-    "installCommand": "pnpm install",
-    "buildCommand": "cd apps/web && pnpm run build",
-    "outputDirectory": "apps/web/.next"
+    "installCommand": "cd ../.. && pnpm install",
+    "buildCommand": "cd ../.. && pnpm turbo build --filter=web"
 }

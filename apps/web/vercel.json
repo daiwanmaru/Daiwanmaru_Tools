@@ -1,4 +1,3 @@
 {
-    "buildCommand": "pnpm install && pnpm --filter=@daiwanmaru/core build && pnpm --filter=web build",
-    "outputDirectory": ".next"
+    "framework": "nextjs"
 }
