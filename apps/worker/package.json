@@ -18,7 +18,8 @@
     "@daiwanmaru/core": "workspace:*",
     "@daiwanmaru/tools": "workspace:*",
     "dotenv": "^17.3.1",
-    "pdf-lib": "^1.17.1"
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",

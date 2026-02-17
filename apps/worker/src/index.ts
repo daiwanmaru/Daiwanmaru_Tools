@@ -9,7 +9,9 @@ import {
 } from '@daiwanmaru/core';
 
 // Import Processors
-import * as PDFMerge from './processors/pdf-merge';
+import * as PDFMerge from './processors/pdf-merge/index.js';
+import * as CombineToPDF from './processors/combine-to-pdf/index.js';
+import * as MarkdownConverter from './processors/markdown-converter/index.js';
 
 // Initialize Adapters
 const queue = new QueueAdapter({
@@ -28,7 +30,8 @@ const storage = new StorageAdapter({
 // Map of available processors
 const processors: Record<string, any> = {
     'pdf-merge': PDFMerge,
-    // Add more here
+    'combine-to-pdf': CombineToPDF,
+    'markdown-converter': MarkdownConverter,
 };
 
 async function downloadFile(key: string, localPath: string) {
@@ -62,7 +65,14 @@ async function processJob(jobId: string) {
         // 1. Fetch Job
         const job = await prisma.job.findUnique({
             where: { id: jobId },
-            include: { tool: true }
+            include: {
+                // @ts-ignore
+                tool: true,
+                // @ts-ignore
+                jobInputs: {
+                    orderBy: { index: 'asc' }
+                }
+            }
         });
 
         if (!job) throw new Error(`Job ${jobId} not found`);
@@ -73,20 +83,23 @@ async function processJob(jobId: string) {
             data: { status: 'PROCESSING', progress: 10 }
         });
 
+        // @ts-ignore
         const processor = processors[job.tool.slug];
+        // @ts-ignore
         if (!processor) throw new Error(`No processor for tool ${job.tool.slug}`);
 
         // 3. Download Inputs
-        const inputs = (job.inputs as any[]) || [];
+        // @ts-ignore
+        const inputFiles = job.jobInputs;
         const localInputPaths: string[] = [];
 
-        for (const input of inputs) {
+        for (const input of inputFiles) {
             // Sanitize filename to prevent directory traversal
-            const safeName = path.basename(input.name);
+            const safeName = `${input.index}-${path.basename(input.filename)}`;
             const localPath = path.join(workingDir, safeName);
-            console.log(`[Worker] Downloading ${input.key} to ${localPath}...`);
+            console.log(`[Worker] Downloading ${input.storageKey} to ${localPath}...`);
 
-            await downloadFile(input.key, localPath);
+            await downloadFile(input.storageKey, localPath);
             localInputPaths.push(localPath);
         }
 
@@ -96,10 +109,12 @@ async function processJob(jobId: string) {
         });
 
         // 4. Execution
+        // @ts-ignore
         console.log(`[Worker] Executing ${job.tool.slug}...`);
 
         const result = await processor.process({
             jobId,
+            // @ts-ignore
             params: (job.params as any) || {},
             inputFiles: localInputPaths,
             workingDir
@@ -128,13 +143,28 @@ async function processJob(jobId: string) {
             await uploadFile(outputKey, outputLocalPath);
         }
 
-        // 6. Complete
+        // 6. Record Output in DB and Complete
+        const finalOutput = result.outputs[0];
+
+        // Get file size
+        const stats = await fs.stat(path.join(workingDir, finalOutput.name));
+
+        // @ts-ignore
+        await prisma.jobOutput.create({
+            data: {
+                jobId: jobId,
+                filename: finalOutput.name,
+                mime: finalOutput.mime || 'application/octet-stream',
+                sizeBytes: stats.size,
+                storageKey: finalOutput.key,
+            }
+        });
+
         await prisma.job.update({
             where: { id: jobId },
             data: {
                 status: 'COMPLETED',
                 progress: 100,
-                outputs: result.outputs // { key, name }
             }
         });
 

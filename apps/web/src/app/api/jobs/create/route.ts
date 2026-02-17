@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@daiwanmaru/core';
 import { ratelimit, storage } from '@/lib/core';
 import { v4 as uuidv4 } from 'uuid';
+import { auth } from '@/auth';
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { toolId, params, files } = body;
+
+        if (!Array.isArray(files)) {
+            return NextResponse.json({ error: 'files must be an array' }, { status: 400 });
+        }
 
         // 1. Rate Limit
         const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
@@ -16,40 +21,72 @@ export async function POST(req: Request) {
             if (!success) {
                 return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
             }
-        } catch (e) {
-            console.warn('Rate limit check failed, proceeding anyway:', e);
+        } catch (e: any) {
+            console.warn('[API] Rate limit check skipped:', e.message);
         }
 
-        // 2. Generate Job ID & Upload URLs first (so we have keys)
+        // 2. Generate Job ID & Upload URLs 
         const jobId = uuidv4();
 
-        // files is { name, contentType }[]
-        // uploadUrls will be { name, key, url }[]
-        const uploadUrls = await storage.createUploadUrls(jobId, files);
+        let uploadUrls;
+        try {
+            const fileMeta = files.map(f => ({
+                name: String(f.name),
+                contentType: String(f.contentType || 'application/octet-stream')
+            }));
+            uploadUrls = await storage.createUploadUrls(jobId, fileMeta);
+        } catch (storageErr: any) {
+            console.error('[API] Storage error:', storageErr);
+            throw storageErr;
+        }
 
-        // 3. Create Job in DB with keys
-        const inputsWithKeys = uploadUrls.map(u => ({
-            name: u.name,
-            key: u.key,
-            contentType: files.find((f: any) => f.name === u.name)?.contentType
-        }));
+        // 3. Create Job in DB
+        let userId = null;
+        try {
+            const session = await auth();
+            userId = session?.user?.id || null;
+        } catch (authErr: any) {
+            console.warn('[API] Auth check failed:', authErr.message);
+        }
 
-        const job = await prisma.job.create({
-            data: {
-                id: jobId,
-                toolId,
-                status: 'PENDING',
-                params,
-                inputs: inputsWithKeys as any,
-            },
-        });
+        try {
+            const job = await prisma.job.create({
+                data: {
+                    id: jobId,
+                    toolId,
+                    userId: userId,
+                    status: 'PENDING',
+                    params: params || {},
+                    // @ts-ignore
+                    jobInputs: {
+                        create: uploadUrls.map((u, index) => {
+                            const originalFile = files.find(f => String(f.name) === String(u.name));
+                            return {
+                                index,
+                                filename: u.name,
+                                mime: originalFile?.contentType || 'application/octet-stream',
+                                sizeBytes: 0,
+                                storageKey: u.key,
+                            };
+                        })
+                    }
+                },
+            });
+            console.log(`[API] Job created: ${job.id}`);
+        } catch (dbErr: any) {
+            console.error('[API] Database error:', dbErr);
+            throw dbErr;
+        }
 
         return NextResponse.json({ jobId, uploadUrls });
 
     } catch (e: any) {
-        console.error('[API] Create Job Error:', e);
+        console.error('[API] Global Error:', e);
         return NextResponse.json(
-            { error: e.message || 'Internal Server Error' },
+            {
+                error: e.message || 'Internal Server Error',
+                stack: process.env.NODE_ENV === 'development' ? e.stack : undefined,
+            },
             { status: 500 }
         );
     }

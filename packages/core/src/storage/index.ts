@@ -54,6 +54,15 @@ export class StorageAdapter {
         );
     }
 
+    async createDownloadUrl(key: string, name: string) {
+        const command = new GetObjectCommand({
+            Bucket: this.bucket,
+            Key: key,
+        });
+        const url = await getSignedUrl(this.client, command, { expiresIn: 3600 });
+        return { key, url, name };
+    }
+
     async downloadFile(key: string): Promise<Buffer> {
         const command = new GetObjectCommand({
             Bucket: this.bucket,
