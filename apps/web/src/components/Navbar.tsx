@@ -94,12 +94,20 @@ export function Navbar() {
                                 )}
                             </div>
                         ) : (
-                            <Link
-                                href="/login"
-                                className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-                            >
-                                Sign In
-                            </Link>
+                            <div className="flex items-center space-x-2">
+                                <Link
+                                    href="/login"
+                                    className="text-sm font-medium text-gray-500 hover:text-gray-900 px-3 py-2"
+                                >
+                                    Sign In
+                                </Link>
+                                <Link
+                                    href="/register"
+                                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                                >
+                                    Sign Up
+                                </Link>
+                            </div>
                         )}
 
                         <button

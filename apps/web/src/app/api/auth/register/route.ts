@@ -29,8 +29,8 @@ export async function POST(req: Request) {
             const user = await tx.user.create({
                 data: {
                     email,
-                    status: "ACTIVE", // Or PENDING if email verification is mandatory
-                    emailVerified: null,
+                    status: "ACTIVE",
+                    emailVerified: new Date(), // DEV: Auto-verify for testing
                 },
             });
 

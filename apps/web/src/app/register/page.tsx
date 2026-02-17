@@ -55,10 +55,9 @@ export default function RegisterPage() {
             <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full text-center space-y-4 bg-white p-8 rounded-2xl shadow-xl border border-blue-100">
                     <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto" />
-                    <h2 className="text-2xl font-bold text-gray-900">Check your email</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Account Created!</h2>
                     <p className="text-gray-600">
-                        We've sent a verification link to <span className="font-medium">{email}</span>.
-                        Please verify your account to continue.
+                        Your account has been successfully created. You can now sign in to start using our tools.
                     </p>
                     <p className="text-sm text-gray-400">Redirecting to login page...</p>
                 </div>
