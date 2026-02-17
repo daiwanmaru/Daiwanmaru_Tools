@@ -55,9 +55,8 @@ export async function POST(req: Request) {
     } catch (error: any) {
         console.error("[REGISTER_ERROR]", error);
         return NextResponse.json({
-            error: "Internal Server Error",
-            details: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            error: `註冊失敗: ${error.message || "發生未知伺服器錯誤"}`,
+            details: error.message
         }, { status: 500 });
     }
 }

@@ -5,16 +5,20 @@ import Credentials from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma, comparePassword } from "@daiwanmaru/core"
 
+if (!process.env.AUTH_SECRET) {
+    console.error("CRITICAL: AUTH_SECRET is missing! Auth.js will fail in production.");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [
         Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID || "not-set",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "not-set",
         }),
         Facebook({
-            clientId: process.env.FACEBOOK_CLIENT_ID,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            clientId: process.env.FACEBOOK_CLIENT_ID || "not-set",
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "not-set",
         }),
         Credentials({
             name: "Credentials",
