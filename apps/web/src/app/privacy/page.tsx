@@ -25,10 +25,18 @@ export default function PrivacyPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-xl font-semibold text-gray-800">3. Cookies and Tracking</h2>
+                        <h2 className="text-xl font-semibold text-gray-800">3. Cookies and Advertising</h2>
                         <p>
-                            We use cookies to maintain your session and remember your preferences. We may use third-party analytics to understand site usage patterns.
+                            We use cookies to maintain your session and remember your preferences.
                         </p>
+                        <div className="bg-blue-50/50 p-4 rounded-xl mt-4 border border-blue-100">
+                            <h3 className="text-sm font-bold text-blue-800 mb-2">Google AdSense Disclosure</h3>
+                            <p className="text-sm text-blue-700 leading-relaxed">
+                                We use Google AdSense to serve ads on our website. Google, as a third-party vendor, uses cookies to serve ads on our site. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet.
+                                <br /><br />
+                                Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="underline font-medium">Google Ad Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" className="underline font-medium">www.aboutads.info</a>.
+                            </p>
+                        </div>
                     </section>
 
                     <section>
