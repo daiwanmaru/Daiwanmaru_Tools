@@ -15,10 +15,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID || "not-set",
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || "not-set",
+            allowDangerousEmailAccountLinking: true,
         }),
         Facebook({
             clientId: process.env.FACEBOOK_CLIENT_ID || "not-set",
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "not-set",
+            allowDangerousEmailAccountLinking: true,
         }),
         Credentials({
             name: "Credentials",
