@@ -77,6 +77,18 @@ export default function Home() {
         <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
           Your All-in-One Online Tool Collection.
         </p>
+
+        {/* Under Implementation Banner */}
+        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl max-w-2xl mx-auto animate-pulse">
+          <p className="text-amber-800 font-medium flex items-center justify-center">
+            <span className="mr-2">🚧</span>
+            本網站仍在實裝中，部分功能可能暫時無法使用。
+            <span className="ml-2">🚧</span>
+          </p>
+          <p className="text-amber-600 text-sm mt-1">
+            The website is still under implementation. Some features may be unavailable.
+          </p>
+        </div>
       </div>
 
       {categoryOrder.map(category => {

@@ -8,7 +8,7 @@ export function Footer() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-8 md:mb-0">
-                        <span className="text-2xl font-bold text-gray-900">TinyWow</span>
+                        <span className="text-2xl font-bold text-blue-600">Daiwanmaru <span className="text-gray-900">Tool</span></span>
                         <p className="mt-2 text-sm text-gray-500">© 2026 Daiwanmaru Tools. All rights reserved.</p>
                     </div>
                     <div className="flex space-x-6">
