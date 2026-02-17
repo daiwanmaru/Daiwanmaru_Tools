@@ -115,20 +115,87 @@ export default function AccountPage() {
                             </div>
                         </section>
 
-                        {/* Subscription */}
+                        {/* Subscription & Billing (Enhanced) */}
                         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                            <div className="px-6 py-4 border-b border-gray-50 bg-gray-50/50 flex items-center space-x-2">
-                                <CreditCard className="h-5 w-5 text-gray-400" />
-                                <h3 className="font-semibold text-gray-900">Subscription & Billing</h3>
-                            </div>
-                            <div className="p-6 flex flex-col items-center justify-center text-center py-12">
-                                <div className="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                                    <CreditCard className="h-8 w-8 text-blue-600" />
+                            <div className="px-6 py-4 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <CreditCard className="h-5 w-5 text-gray-400" />
+                                    <h3 className="font-semibold text-gray-900">Subscription & Billing</h3>
                                 </div>
-                                <h4 className="font-bold text-gray-900">No active subscription</h4>
-                                <p className="text-sm text-gray-500 max-w-xs mt-2">
-                                    Unlock 10GB+ storage, unlimited conversions, and 24/7 priority support.
-                                </p>
+                                <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Payment powered by Stripe</span>
+                            </div>
+
+                            <div className="p-6">
+                                {/* Plan Comparison */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                                    <div className={`p-5 rounded-2xl border-2 transition-all ${user?.plan !== 'PRO' ? 'border-blue-500 bg-blue-50/30' : 'border-gray-100 bg-white'}`}>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h4 className="font-bold text-gray-900">Free Explorer</h4>
+                                                <p className="text-xs text-gray-500 mt-1">Perfect for casual use</p>
+                                            </div>
+                                            {user?.plan !== 'PRO' && <span className="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Current</span>}
+                                        </div>
+                                        <div className="text-2xl font-black text-gray-900 mb-4">$0 <span className="text-xs font-normal text-gray-400">/ month</span></div>
+                                        <ul className="space-y-2 mb-0">
+                                            <li className="flex items-center text-xs text-gray-600">
+                                                <ChevronRight className="h-3 w-3 text-blue-500 mr-1" /> Up to 5 files / day
+                                            </li>
+                                            <li className="flex items-center text-xs text-gray-600">
+                                                <ChevronRight className="h-3 w-3 text-blue-500 mr-1" /> Basic PDF tools
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div className={`p-5 rounded-2xl border-2 transition-all group relative overflow-hidden ${user?.plan === 'PRO' ? 'border-indigo-500 bg-indigo-50/30' : 'border-gray-100 bg-white hover:border-indigo-200'}`}>
+                                        <div className="absolute -right-4 -top-4 bg-indigo-500 text-white text-[10px] px-8 py-4 rotate-45 font-bold shadow-lg">POPULAR</div>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h4 className="font-bold text-gray-900">Pro Collector</h4>
+                                                <p className="text-xs text-gray-500 mt-1">For heavy creative work</p>
+                                            </div>
+                                            {user?.plan === 'PRO' && <span className="bg-indigo-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">Current</span>}
+                                        </div>
+                                        <div className="text-2xl font-black text-indigo-600 mb-4">$9.9 <span className="text-xs font-normal text-gray-400">/ month</span></div>
+                                        <ul className="space-y-2 mb-4">
+                                            <li className="flex items-center text-xs text-gray-600">
+                                                <ChevronRight className="h-3 w-3 text-indigo-500 mr-1" /> Unlimited file processing
+                                            </li>
+                                            <li className="flex items-center text-xs text-gray-600">
+                                                <ChevronRight className="h-3 w-3 text-indigo-500 mr-1" /> High-speed cloud export
+                                            </li>
+                                            <li className="flex items-center text-xs text-gray-600">
+                                                <ChevronRight className="h-3 w-3 text-indigo-500 mr-1" /> Priority 24/7 support
+                                            </li>
+                                        </ul>
+                                        {user?.plan !== 'PRO' && (
+                                            <button className="w-full py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100 active:scale-95">
+                                                Upgrade Now
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Billing History Placeholder */}
+                                <div className="space-y-4">
+                                    <h4 className="text-sm font-bold text-gray-900">Billing History</h4>
+                                    <div className="border border-gray-100 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50/30">
+                                        <p className="text-sm text-gray-400 font-medium italic">No invoices found</p>
+                                        <p className="text-[10px] text-gray-300 mt-1">Invoices appear here after your first payment.</p>
+                                    </div>
+                                </div>
+
+                                {/* Billing FAQ */}
+                                <div className="mt-8 pt-8 border-t border-gray-50 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-bold text-gray-900">Can I cancel anytime?</p>
+                                        <p className="text-[11px] text-gray-500">Yes, you can cancel your subscription at any time with one click. You will remain Pro until the end of your billing cycle.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-bold text-gray-900">What payment methods do you accept?</p>
+                                        <p className="text-[11px] text-gray-500">We accept all major credit cards, Apple Pay, and Google Pay via our secure partner Stripe.</p>
+                                    </div>
+                                </div>
                             </div>
                         </section>
 
