@@ -15,7 +15,7 @@ function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(errorParam ? 'Authentication failed. Please check your credentials.' : null);
+    const [error, setError] = useState<string | null>(searchParams.get("error") === "CredentialsSignin" ? "Invalid email or password." : searchParams.get("error") || null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
