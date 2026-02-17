@@ -15,6 +15,7 @@
     "postinstall": "prisma generate",
     "build": "prisma generate && tsc",
     "dev": "tsc -w",
+    "setup:db": "node scripts/setup-db.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
     "seed": "tsx seed.ts"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20.19.33",
     "@types/uuid": "^11.0.0",
     "dotenv": "^17.3.1",
@@ -37,6 +39,7 @@
     "@prisma/client": "^5.22.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.2",
+    "bcryptjs": "^3.0.3",
     "uuid": "^13.0.0"
   }
 }

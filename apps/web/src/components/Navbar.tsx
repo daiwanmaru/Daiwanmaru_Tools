@@ -1,11 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, Search, User } from 'lucide-react';
+import { Menu, Search, User, LogOut, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 export function Navbar() {
+    const { data: session, status } = useSession();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     const navItems = [
         { name: 'DOC', href: '/category/doc' },
@@ -13,6 +16,8 @@ export function Navbar() {
         { name: 'VIDEO', href: '/category/video' },
         { name: 'AUDIO', href: '/category/audio' },
     ];
+
+    const isLoading = status === 'loading';
 
     return (
         <nav className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
@@ -43,9 +48,60 @@ export function Navbar() {
                                 className="ml-2 bg-transparent border-none focus:outline-none text-sm text-gray-700 placeholder-gray-400 w-32 lg:w-48"
                             />
                         </div>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
-                            Sign In
-                        </button>
+
+                        {isLoading ? (
+                            <div className="h-8 w-8 rounded-full bg-gray-100 animate-pulse" />
+                        ) : session ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                    className="flex items-center space-x-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
+                                >
+                                    {session.user?.image ? (
+                                        <img src={session.user.image} alt="" className="h-8 w-8 rounded-full" />
+                                    ) : (
+                                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <User className="h-5 w-5 text-blue-600" />
+                                        </div>
+                                    )}
+                                    <span className="hidden sm:block text-sm font-medium text-gray-700">
+                                        {session.user?.name || session.user?.email?.split('@')[0]}
+                                    </span>
+                                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                                </button>
+
+                                {isUserMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-lg shadow-lg py-1 z-50">
+                                        <div className="px-4 py-2 border-b border-gray-100">
+                                            <p className="text-xs text-gray-400">Signed in as</p>
+                                            <p className="text-sm font-medium text-gray-900 truncate">{session.user?.email}</p>
+                                        </div>
+                                        <Link
+                                            href="/account"
+                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                            onClick={() => setIsUserMenuOpen(false)}
+                                        >
+                                            Account Settings
+                                        </Link>
+                                        <button
+                                            onClick={() => signOut()}
+                                            className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                        >
+                                            <LogOut className="h-4 w-4 mr-2" />
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                            >
+                                Sign In
+                            </Link>
+                        )}
+
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
@@ -69,6 +125,14 @@ export function Navbar() {
                                 {item.name}
                             </Link>
                         ))}
+                        {!session && (
+                            <Link
+                                href="/login"
+                                className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:bg-blue-50"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </div>
             )}

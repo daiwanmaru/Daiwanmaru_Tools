@@ -17,10 +17,16 @@ interface CategoryGroup {
 export default function Home() {
   const [categories, setCategories] = useState<CategoryGroup>({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/tools')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data: Tool[]) => {
         const grouped = data.reduce((acc, tool) => {
           const category = tool.category || 'OTHER';
@@ -33,6 +39,7 @@ export default function Home() {
       })
       .catch(err => {
         console.error('Failed to fetch tools:', err);
+        setError(err.message || 'Failed to load tools');
         setLoading(false);
       });
   }, []);
@@ -40,6 +47,21 @@ export default function Home() {
   if (loading) return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="text-xl font-semibold">Loading tools...</div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="text-xl font-semibold text-red-600 mb-2">Failed to load tools</div>
+        <div className="text-gray-600">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Retry
+        </button>
+      </div>
     </div>
   );
 
