@@ -24,8 +24,9 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
-                        <Link href="/" className="flex-shrink-0 flex items-center">
-                            <span className="text-2xl font-bold text-blue-600">Daiwanmaru <span className="text-gray-900">Tool</span></span>
+                        <Link href="/" className="flex-shrink-0 flex items-center space-x-2 group">
+                            <img src="/logo-icon.png" alt="Daiwanmaru Icon" className="h-10 w-auto group-hover:scale-110 transition-transform duration-300" />
+                            <img src="/logo-text.png" alt="Daiwanmaru Tool" className="h-6 w-auto hidden sm:block" />
                         </Link>
                         <div className="hidden md:ml-10 md:flex md:space-x-8">
                             {navItems.map((item) => (

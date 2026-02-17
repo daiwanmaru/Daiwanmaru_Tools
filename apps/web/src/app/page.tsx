@@ -71,9 +71,12 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-          Daiwanmaru Tool
-        </h1>
+        <div className="flex justify-center mb-6">
+          <img src="/logo-icon.png" alt="Daiwanmaru Icon" className="h-24 w-auto animate-float" />
+        </div>
+        <div className="flex justify-center">
+          <img src="/logo-text.png" alt="Daiwanmaru Tool" className="h-16 w-auto" />
+        </div>
         <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
           Your All-in-One Online Tool Collection.
         </p>
