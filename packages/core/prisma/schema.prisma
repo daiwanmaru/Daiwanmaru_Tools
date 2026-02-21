@@ -39,15 +39,45 @@ model Job {
   errorCode     String?
   errorMessage  String?
   params        Json?     // User provided parameters
-  inputs        Json?     // Input file references
-  outputs       Json?     // Output file references
   expireAt      DateTime?
   userId        String?
   user          User?     @relation(fields: [userId], references: [id])
+  
+  // Relations
+  jobInputs     JobInput[]
+  jobOutput     JobOutput?
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([status])
+}
+
+model JobInput {
+  id            String   @id @default(uuid())
+  jobId         String
+  job           Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  index         Int      // Merge order
+  filename      String
+  mime          String
+  sizeBytes     Int
+  storageKey    String   // B2 key
+  etag          String?
+  createdAt     DateTime @default(now())
+
+  @@unique([jobId, index])
+  @@index([jobId])
+}
+
+model JobOutput {
+  id            String   @id @default(uuid())
+  jobId         String   @unique
+  job           Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  filename      String   @default("merged.pdf")
+  mime          String   @default("application/pdf")
+  sizeBytes     Int
+  storageKey    String
+  createdAt     DateTime @default(now())
 }
 
 model User {

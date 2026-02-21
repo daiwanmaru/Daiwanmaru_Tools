@@ -12,6 +12,7 @@ import {
 import * as PDFMerge from './processors/pdf-merge/index.js';
 import * as CombineToPDF from './processors/combine-to-pdf/index.js';
 import * as MarkdownConverter from './processors/markdown-converter/index.js';
+import * as ImageResize from './processors/image-resize/index.js';
 
 // Initialize Adapters
 const queue = new QueueAdapter({
@@ -32,6 +33,7 @@ const processors: Record<string, any> = {
     'pdf-merge': PDFMerge,
     'combine-to-pdf': CombineToPDF,
     'markdown-converter': MarkdownConverter,
+    'image-resize': ImageResize,
 };
 
 async function downloadFile(key: string, localPath: string) {

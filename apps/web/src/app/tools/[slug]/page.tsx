@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@daiwanmaru/core';
 import { UploadZone } from '@/components/UploadZone';
 import { Sidebar } from '@/components/Sidebar';
@@ -9,6 +9,18 @@ export interface ToolPageProps {
 
 export default async function ToolPage(props: ToolPageProps) {
     const { slug } = await props.params;
+
+    if (slug === 'combine-to-pdf' || slug === 'pdf-merge') {
+        redirect('/tools/pdf-merge');
+    }
+
+    if (slug === 'markdown-converter') {
+        redirect('/tools/markdown-converter');
+    }
+
+    if (slug === 'image-resize') {
+        redirect('/tools/image-resize');
+    }
 
     const tool = await prisma.tool.findUnique({
         where: { slug: slug },

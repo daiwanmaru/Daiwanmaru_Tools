@@ -46,12 +46,37 @@ export default function MarkdownConverterPage() {
 
     const totalSize = files.reduce((acc, f) => acc + f.size, 0);
 
+    const SUPPORTED_EXTENSIONS = ['.docx', '.pdf', '.html', '.htm', '.txt', '.md'];
+
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const newFiles = Array.from(e.target.files);
-            const combined = [...files, ...newFiles].slice(0, MAX_FILES);
-            setFiles(combined);
-            setError(null);
+            const validFiles: File[] = [];
+            let errorMsg: string | null = null;
+
+            for (const file of newFiles) {
+                const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+                if (!SUPPORTED_EXTENSIONS.includes(ext)) {
+                    errorMsg = `File type ${ext} is not supported. Supported: ${SUPPORTED_EXTENSIONS.join(', ')}`;
+                    continue;
+                }
+                if (file.size > 20 * 1024 * 1024 && !isPro) {
+                    errorMsg = `File ${file.name} exceeds 20MB limit.`;
+                    continue;
+                }
+                validFiles.push(file);
+            }
+
+            if (errorMsg) setError(errorMsg);
+
+            setFiles(prev => {
+                const combined = [...prev, ...validFiles];
+                if (combined.length > MAX_FILES) {
+                    setError(`Maximum ${MAX_FILES} files allowed.`);
+                    return combined.slice(0, MAX_FILES);
+                }
+                return combined;
+            });
         }
     };
 

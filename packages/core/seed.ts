@@ -6,17 +6,20 @@ async function main() {
     const tools = [
         {
             slug: 'pdf-merge',
-            name: 'PDF Merge',
-            description: 'Merge multiple PDF files into one.',
+            name: 'PDF Merge & 合併 PDF',
+            description: 'Merge multiple PDF and image files into a single document.',
             category: 'DOC',
             paramsDefine: {
                 fields: [
                     {
-                        name: 'outputName',
-                        label: 'Output Filename',
-                        type: 'string',
-                        default: 'merged.pdf',
-                        required: true,
+                        name: 'pageSize',
+                        label: 'Page Size',
+                        type: 'select',
+                        options: [
+                            { label: 'A4', value: 'A4' },
+                            { label: 'Original', value: 'original' },
+                        ],
+                        default: 'A4',
                     },
                 ],
             },
@@ -64,6 +67,28 @@ async function main() {
                 ],
             },
         },
+        {
+            slug: 'markdown-converter',
+            name: 'Markdown 轉換器',
+            description: '將 DOCX, PDF, HTML 或 TXT 檔案轉換為 Markdown 格式。',
+            category: 'DOC',
+            paramsDefine: {
+                fields: [
+                    {
+                        name: 'extractImages',
+                        label: '提取圖片',
+                        type: 'boolean',
+                        default: true,
+                    },
+                    {
+                        name: 'frontMatter',
+                        label: '包含 Front Matter',
+                        type: 'boolean',
+                        default: true,
+                    },
+                ],
+            },
+        },
     ];
 
     for (const tool of tools) {
@@ -80,6 +105,7 @@ async function main() {
 main()
     .catch((e) => {
         console.error(e);
+        // @ts-ignore
         process.exit(1);
     })
     .finally(async () => {
