@@ -29,24 +29,47 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) return null
+                if (!credentials?.email || !credentials?.password) {
+                    console.log("[AUTH] Missing credentials");
+                    return null;
+                }
 
+                console.log("[AUTH] Attempting login for:", credentials.email);
                 const user = await (prisma.user as any).findUnique({
                     where: { email: credentials.email as string },
                     include: { password: true }
                 })
 
-                if (!user || !user.password) return null
+                if (!user) {
+                    console.log("[AUTH] User not found:", credentials.email);
+                    return null;
+                }
+
+                if (!user.password) {
+                    console.log("[AUTH] User has no password set (likely OAuth only):", credentials.email);
+                    return null;
+                }
 
                 const isValid = await comparePassword(credentials.password as string, user.password.passwordHash)
 
-                if (!isValid) return null
+                if (!isValid) {
+                    console.log("[AUTH] Invalid password for:", credentials.email);
+                    return null;
+                }
 
                 // Spec: check user status
-                if (user.status !== "ACTIVE") throw new Error("USER_DISABLED")
-                // Spec: check email verified
-                if (!user.emailVerified) throw new Error("EMAIL_NOT_VERIFIED")
+                if (user.status !== "ACTIVE") {
+                    console.log("[AUTH] User disabled:", credentials.email);
+                    throw new Error("USER_DISABLED");
+                }
 
+                // Spec: check email verified
+                if (!user.emailVerified) {
+                    console.log("[AUTH] Email not verified:", credentials.email);
+                    throw new Error("EMAIL_NOT_VERIFIED");
+                }
+
+                console.log("[AUTH] Login successful for:", credentials.email);
                 return {
                     id: user.id,
                     name: user.name,
@@ -59,19 +82,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         })
     ],
     callbacks: {
-        async session({ session, user }) {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                // @ts-ignore
+                token.plan = user.plan;
+                // @ts-ignore
+                token.status = user.status;
+            }
+            return token;
+        },
+        async session({ session, token }) {
             if (session.user) {
-                session.user.id = user.id;
+                session.user.id = token.id as string;
                 // @ts-ignore
-                session.user.plan = (user as any).plan;
+                session.user.plan = token.plan;
                 // @ts-ignore
-                session.user.status = (user as any).status;
+                session.user.status = token.status;
             }
             return session
         }
     },
     session: {
-        strategy: "database"
+        strategy: "jwt"
     },
     pages: {
         signIn: "/login",
