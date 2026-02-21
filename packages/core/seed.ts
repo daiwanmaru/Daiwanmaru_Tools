@@ -5,13 +5,33 @@ async function main() {
 
     // 1. Cleanup old or redundant tools
     console.log('Cleaning up old tools...');
-    await prisma.tool.deleteMany({
+    const toolsToDelete = await prisma.tool.findMany({
         where: {
             slug: {
                 in: ['combine-to-pdf', 'pdf-combine']
             }
         }
     });
+
+    if (toolsToDelete.length > 0) {
+        const toolIds = toolsToDelete.map(t => t.id);
+        console.log(`Found ${toolIds.length} tools to cleanup. Deleting associated jobs...`);
+        await prisma.job.deleteMany({
+            where: {
+                toolId: {
+                    in: toolIds
+                }
+            }
+        });
+
+        await prisma.tool.deleteMany({
+            where: {
+                id: {
+                    in: toolIds
+                }
+            }
+        });
+    }
 
     const tools = [
         {

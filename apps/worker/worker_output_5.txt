@@ -1,0 +1,7 @@
+[Worker] Worker started. Polling for jobs...
+[Worker] Queue Key: job_queue
+[Worker] Found Job: caf79647-a9f1-4430-b6e7-fb6fc2329050
+[Worker] Processing Job: caf79647-a9f1-4430-b6e7-fb6fc2329050
+[Worker] Job caf79647-a9f1-4430-b6e7-fb6fc2329050 error: Error: No processor for tool pdf-compress
+    at processJob (C:\dev\daiwanmaru_tools\monorepo\apps\worker\src\index.ts:91:31)
+    at async start (C:\dev\daiwanmaru_tools\monorepo\apps\worker\src\index.ts:208:17)

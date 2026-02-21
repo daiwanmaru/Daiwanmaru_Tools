@@ -1,7 +1,8 @@
-import mammoth from 'mammoth';
-import TurndownService from 'turndown';
-// @ts-ignore
-import pdf from 'pdf-parse';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mammoth = require('mammoth');
+const TurndownService = require('turndown');
+const pdf = require('pdf-parse');
 import fs from 'fs/promises';
 import path from 'path';
 import { JSDOM } from 'jsdom';
@@ -46,7 +47,8 @@ export const process = async (input: ProcessInput): Promise<ProcessOutput> => {
                 });
                 markdown = turndownService.turndown(html);
             } else if (fileExtension === '.pdf') {
-                const data = await pdf(fileBytes);
+                const pdfFunc = typeof pdf === 'function' ? pdf : pdf.default;
+                const data = await pdfFunc(fileBytes);
                 // Basic cleanup for PDF text
                 markdown = data.text.replace(/\r/g, '').replace(/ +/g, ' ');
                 if (data.text.trim().length < 100) {
