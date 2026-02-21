@@ -119,6 +119,22 @@ async function main() {
                 ],
             },
         },
+        {
+            slug: 'pdf-converter',
+            name: 'PDF 轉換器',
+            description: '將圖片、DOCX 或其他格式轉換為 PDF 檔案。',
+            category: 'DOC',
+            paramsDefine: {
+                fields: [
+                    {
+                        name: 'outputName',
+                        label: '輸出檔名',
+                        type: 'string',
+                        default: 'converted-document',
+                    },
+                ],
+            },
+        },
     ];
 
     for (const tool of tools) {
