@@ -193,17 +193,26 @@ async function processJob(jobId: string) {
 }
 
 async function start() {
-    console.log('[Worker] Polling for jobs...');
+    console.log('[Worker] Worker started. Polling for jobs...');
+    console.log(`[Worker] Queue Key: job_queue`);
+
     while (true) {
         try {
-            const jobId = await queue.dequeue();
+            const result = await queue.dequeue();
+
+            // Handle different return types from Redis clients
+            const jobId = typeof result === 'string' ? result : (result as any)?.id;
+
             if (jobId) {
+                console.log(`[Worker] Found Job: ${jobId}`);
                 await processJob(jobId);
             } else {
+                // No job, sleep a bit
                 await new Promise(r => setTimeout(r, 1000));
             }
-        } catch (e) {
-            console.error('[Worker] Poll error:', e);
+        } catch (e: any) {
+            console.error('[Worker] Loop Error:', e.message);
+            if (e.stack) console.error(e.stack);
             await new Promise(r => setTimeout(r, 5000));
         }
     }

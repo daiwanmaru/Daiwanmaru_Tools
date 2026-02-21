@@ -97,7 +97,7 @@ export default function MarkdownConverterPage() {
                     if (job.status === 'COMPLETED') {
                         clearInterval(interval);
                         if (job.downloadUrl) {
-                            setDownloadUrl(job.downloadUrl.url);
+                            setDownloadUrl(typeof job.downloadUrl === 'string' ? job.downloadUrl : job.downloadUrl.url);
                         }
                         setUploading(false);
                     } else if (job.status === 'FAILED') {

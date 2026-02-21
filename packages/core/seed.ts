@@ -3,6 +3,16 @@ import { prisma } from './src/db/index.js';
 async function main() {
     console.log('Seeding tools...');
 
+    // 1. Cleanup old or redundant tools
+    console.log('Cleaning up old tools...');
+    await prisma.tool.deleteMany({
+        where: {
+            slug: {
+                in: ['combine-to-pdf', 'pdf-combine']
+            }
+        }
+    });
+
     const tools = [
         {
             slug: 'pdf-merge',
@@ -99,7 +109,7 @@ async function main() {
         });
     }
 
-    console.log('Seed completed.');
+    console.log('Seed completed successfully.');
 }
 
 main()
