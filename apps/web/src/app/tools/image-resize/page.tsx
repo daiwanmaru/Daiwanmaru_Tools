@@ -23,12 +23,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ImageResizePage() {
-    const { data: session, status } = useSession({
-        required: true,
-        onUnauthenticated() {
-            redirect('/login');
-        },
-    });
+    const { data: session, status } = useSession();
 
     const [step, setStep] = useState<'upload' | 'settings' | 'processing'>('upload');
     const [files, setFiles] = useState<File[]>([]);
@@ -179,263 +174,215 @@ export default function ImageResizePage() {
     if (status === 'loading') return null;
 
     return (
-        <div className="min-h-screen bg-[#111216] text-white">
-            <div className="max-w-[1600px] mx-auto min-h-screen flex flex-col">
-                {/* Header/Nav */}
-                <header className="p-4 flex items-center justify-between border-b border-white/5">
-                    <div className="flex items-center space-x-4">
-                        <Link href="/tools" className="p-2 hover:bg-white/5 rounded-full transition-colors">
-                            <X className="h-5 w-5 text-gray-400" />
-                        </Link>
-                        <div>
-                            <h1 className="text-lg font-bold">Image Resize</h1>
-                        </div>
-                    </div>
-                </header>
+        <div className="min-h-screen bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
+                {/* Breadcrumbs */}
+                <nav className="flex items-center space-x-2 text-xs font-medium text-neutral-400 mb-8">
+                    <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                    <ChevronRight className="h-3 w-3" />
+                    <Link href="/tools" className="hover:text-blue-600 transition-colors">Tools</Link>
+                    <ChevronRight className="h-3 w-3" />
+                    <span className="text-neutral-600">Image Resize</span>
+                </nav>
 
-                <main className="flex-1 flex overflow-hidden">
-                    {step === 'upload' ? (
-                        <div className="flex-1 flex items-center justify-center p-8 text-center">
-                            <div className="max-w-xl w-full">
-                                <div className="relative group border-2 border-dashed border-white/10 rounded-[32px] p-24 transition-all hover:border-blue-500/50 hover:bg-blue-500/5 cursor-pointer">
-                                    <input
-                                        type="file"
-                                        multiple
-                                        accept="image/*"
-                                        onChange={handleFileSelect}
-                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                    />
-                                    <div className="flex flex-col items-center space-y-6">
-                                        <div className="p-6 bg-blue-500/10 rounded-3xl group-hover:scale-110 transition-transform">
-                                            <Upload className="h-10 w-10 text-blue-500" />
-                                        </div>
-                                        <div>
-                                            <p className="text-2xl font-bold">Upload your images</p>
-                                            <p className="text-gray-500 mt-2">Maximum {MAX_FILES} files, up to {isPro ? '50MB' : '10MB'} total</p>
-                                        </div>
-                                    </div>
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-black text-neutral-900 tracking-tight mb-4">Image Resize & 圖片縮放</h1>
+                    <p className="text-neutral-500 max-w-xl mx-auto uppercase tracking-[0.2em] text-[10px] font-bold">
+                        Professional image processing utilities.
+                    </p>
+                </div>
+
+                {step === 'upload' && (
+                    <div className="max-w-2xl mx-auto">
+                        <div className="relative group border-4 border-dashed rounded-3xl p-20 transition-all duration-300 bg-white border-neutral-200 hover:border-blue-400 hover:bg-blue-50/30">
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                onChange={handleFileSelect}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                            />
+                            <div className="flex flex-col items-center justify-center space-y-4">
+                                <div className="p-6 bg-blue-50 rounded-full group-hover:scale-110 transition-transform duration-300">
+                                    <Upload className="h-10 w-10 text-blue-600" />
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-xl font-bold text-neutral-900">Drop images here or click to upload</p>
+                                    <p className="text-sm text-neutral-400 mt-2">JPG, PNG, WebP (Max {MAX_FILES} files)</p>
                                 </div>
                             </div>
                         </div>
-                    ) : step === 'settings' ? (
-                        <>
-                            {/* Left Settings Sidebar */}
-                            <aside className="w-[320px] bg-[#1a1b1f] border-r border-white/5 overflow-y-auto p-6 flex flex-col">
-                                <section className="mb-10">
-                                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Resize Settings</h3>
+                    </div>
+                )}
 
-                                    <div className="bg-[#111216] p-1 rounded-xl flex mb-8">
+                {step === 'settings' && (
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        {/* Main Preview Area */}
+                        <div className="lg:col-span-2 space-y-6">
+                            <div className="bg-white rounded-3xl shadow-sm border border-neutral-100 p-8">
+                                <section className="mb-8 flex justify-between items-center px-2">
+                                    <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Image Previews</h3>
+                                    <span className="text-[10px] font-bold text-blue-600">{files.length} SELECTED</span>
+                                </section>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {files.map((file, i) => (
+                                        <div key={i} className="group relative bg-neutral-50 rounded-2xl overflow-hidden border border-neutral-100 hover:border-blue-200 transition-all">
+                                            <div className="aspect-square relative flex items-center justify-center p-4">
+                                                <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                                                    <button onClick={() => removeFile(i)} className="p-2 bg-white/90 backdrop-blur shadow-sm rounded-lg hover:text-red-600 transition-colors">
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                                <img src={previews[i]} alt={file.name} className="max-w-full max-h-full object-contain rounded-lg shadow-sm" />
+                                            </div>
+                                            <div className="px-4 py-3 bg-white border-t border-neutral-50">
+                                                <p className="text-[10px] font-bold text-neutral-500 truncate mb-1 uppercase tracking-wider">{file.name}</p>
+                                                <div className="flex items-center text-[10px] font-bold text-blue-600">
+                                                    <span>{width || '?'} × {height || '?'} PX</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-neutral-200 rounded-2xl hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer group">
+                                        <input type="file" multiple accept="image/*" onChange={handleFileSelect} className="hidden" />
+                                        <Plus className="h-6 w-6 text-neutral-400 group-hover:text-blue-600 transition-transform group-hover:scale-110" />
+                                        <span className="text-[10px] font-bold text-neutral-400 mt-2 uppercase tracking-widest group-hover:text-blue-600">Add More</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Settings sidebar */}
+                        <div className="space-y-6">
+                            <div className="bg-white rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100 p-8">
+                                <h3 className="text-lg font-bold text-neutral-900 mb-6 flex items-center">
+                                    <Settings className="h-5 w-5 mr-3 text-blue-600" />
+                                    Resize Options
+                                </h3>
+
+                                <div className="space-y-6">
+                                    <div className="bg-neutral-50 p-1 rounded-xl flex">
                                         {[
-                                            { id: 'size', label: 'By Size' },
-                                            { id: 'percentage', label: 'As %' },
+                                            { id: 'size', label: 'Size' },
+                                            { id: 'percentage', label: '%' },
                                             { id: 'social', label: 'Social' }
                                         ].map(mode => (
                                             <button
                                                 key={mode.id}
                                                 onClick={() => setResizeMode(mode.id as any)}
-                                                className={`flex-1 py-2 px-1 text-xs font-bold rounded-lg transition-all ${resizeMode === mode.id ? 'bg-[#2a2b2f] text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                                                className={`flex-1 py-2 px-1 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${resizeMode === mode.id ? 'bg-white text-blue-600 shadow-sm' : 'text-neutral-400 hover:text-neutral-600'}`}
                                             >
                                                 {mode.label}
                                             </button>
                                         ))}
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 mb-6">
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2">Width</label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={width}
-                                                    onChange={e => setWidth(e.target.value)}
-                                                    className="w-full bg-[#111216] border border-white/5 rounded-xl px-4 py-3 text-sm font-bold focus:border-blue-500 transition-colors"
-                                                />
-                                            </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Width</label>
+                                            <input
+                                                type="text"
+                                                value={width}
+                                                onChange={e => setWidth(e.target.value)}
+                                                className="w-full px-4 py-3 bg-neutral-50 border-2 border-neutral-50 rounded-2xl text-sm font-bold focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                            />
                                         </div>
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2">Height</label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={height}
-                                                    onChange={e => setHeight(e.target.value)}
-                                                    className="w-full bg-[#111216] border border-white/5 rounded-xl px-4 py-3 text-sm font-bold focus:border-blue-500 transition-colors"
-                                                />
-                                            </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Height</label>
+                                            <input
+                                                type="text"
+                                                value={height}
+                                                onChange={e => setHeight(e.target.value)}
+                                                className="w-full px-4 py-3 bg-neutral-50 border-2 border-neutral-50 rounded-2xl text-sm font-bold focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                            />
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={() => setLockAspectRatio(!lockAspectRatio)}
-                                        className="flex items-center text-xs font-bold text-gray-400 hover:text-white transition-colors"
+                                        className="flex items-center text-[10px] font-bold text-neutral-400 hover:text-blue-600 transition-colors uppercase tracking-widest"
                                     >
-                                        <div className={`w-4 h-4 rounded border flex items-center justify-center mr-2 transition-colors ${lockAspectRatio ? 'bg-blue-600 border-blue-600' : 'border-white/10'}`}>
-                                            {lockAspectRatio ? <Lock className="h-2 w-2 text-white" /> : <Unlock className="h-2 w-2" />}
+                                        <div className={`w-4 h-4 rounded-md border flex items-center justify-center mr-2 transition-colors ${lockAspectRatio ? 'bg-blue-600 border-blue-600' : 'border-neutral-300'}`}>
+                                            {lockAspectRatio && <CheckCircle2 className="h-2 w-2 text-white" />}
                                         </div>
                                         Lock Aspect Ratio
                                     </button>
-                                </section>
 
-                                <section className="mb-10">
-                                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6 px-1">Export Settings</h3>
-
-                                    <div className="space-y-6">
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2">Target File Size (Optional)</label>
-                                            <div className="flex space-x-2">
-                                                <input
-                                                    type="text"
-                                                    placeholder="KB"
-                                                    value={targetFileSize}
-                                                    onChange={e => setTargetFileSize(e.target.value)}
-                                                    className="flex-1 bg-[#111216] border border-white/5 rounded-xl px-4 py-3 text-sm font-bold focus:border-blue-500"
-                                                />
-                                                <div className="bg-[#111216] px-4 py-3 rounded-xl border border-white/5 text-xs font-bold text-gray-500">KB</div>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2">Save Image As</label>
-                                            <select
-                                                value={format}
-                                                onChange={e => setFormat(e.target.value)}
-                                                className="w-full bg-[#111216] border border-white/5 rounded-xl px-4 py-3 text-sm font-bold focus:border-blue-500 appearance-none transition-colors"
-                                            >
-                                                <option value="original">Original Format</option>
-                                                <option value="jpg">JPG</option>
-                                                <option value="png">PNG</option>
-                                                <option value="webp">WebP</option>
-                                            </select>
-                                        </div>
+                                    <div className="pt-4 border-t border-neutral-50">
+                                        <button
+                                            onClick={handleSubmit}
+                                            className="w-full inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black shadow-xl shadow-blue-200 transition-all active:scale-95"
+                                        >
+                                            Resize Images
+                                            <ArrowRight className="ml-2 h-5 w-5" />
+                                        </button>
                                     </div>
-                                </section>
+                                </div>
+                            </div>
 
-                                <div className="mt-auto">
+                            {error && (
+                                <div className="p-4 bg-red-50 text-red-700 rounded-2xl border border-red-100 flex items-center">
+                                    <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+                                    <p className="text-[10px] font-bold uppercase tracking-widest">{error}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {step === 'processing' && (
+                    <div className="max-w-lg mx-auto bg-white rounded-3xl shadow-2xl p-12 text-center border border-neutral-100">
+                        {uploading ? (
+                            <div className="space-y-8">
+                                <div className="relative inline-block">
+                                    <div className="h-32 w-32 rounded-full border-4 border-neutral-50 border-t-blue-600 animate-spin"></div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-lg font-black text-blue-600">{progress}%</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-black text-neutral-900 uppercase tracking-[0.1em]">{jobStatus?.toLowerCase().replace('_', ' ') || 'Processing'}</h3>
+                                    <p className="text-neutral-400 text-[10px] font-bold uppercase tracking-widest italic">Optimizing and resizing...</p>
+                                </div>
+                                <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-600 transition-all duration-500 shadow-sm" style={{ width: `${progress}%` }}></div>
+                                </div>
+                            </div>
+                        ) : downloadUrls.length > 0 ? (
+                            <div className="animate-in zoom-in duration-300 space-y-8">
+                                <div className="h-24 w-24 bg-green-50 rounded-full flex items-center justify-center mx-auto shadow-sm">
+                                    <CheckCircle2 className="h-12 w-12 text-green-600" />
+                                </div>
+                                <h2 className="text-3xl font-black text-neutral-900">Success!</h2>
+                                <div className="space-y-3 pt-4">
+                                    {downloadUrls.map((file, i) => (
+                                        <a
+                                            key={i}
+                                            href={file.url}
+                                            download={file.name}
+                                            className="w-full flex items-center justify-between p-5 bg-neutral-50 hover:bg-neutral-100 rounded-2xl transition-all border border-neutral-100 group"
+                                        >
+                                            <span className="text-[10px] font-black text-neutral-600 uppercase tracking-widest truncate pr-4">{file.name}</span>
+                                            <Download className="h-5 w-5 text-blue-600 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                        </a>
+                                    ))}
                                     <button
-                                        onClick={handleSubmit}
-                                        className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black shadow-2xl shadow-blue-500/20 transition-all active:scale-[0.98] flex items-center justify-center"
+                                        onClick={() => {
+                                            setStep('upload');
+                                            setFiles([]);
+                                            setDownloadUrls([]);
+                                            setError(null);
+                                        }}
+                                        className="inline-block mt-12 text-[10px] font-bold text-neutral-400 hover:text-blue-600 uppercase tracking-[0.3em] transition-all underline decoration-1 underline-offset-[12px]"
                                     >
-                                        Export
-                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                        Resize more images
                                     </button>
                                 </div>
-                            </aside>
-
-                            {/* Main Content Area */}
-                            <div className="flex-1 bg-[#111216] p-8 overflow-y-auto">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {files.map((file, i) => (
-                                        <div key={i} className="group relative bg-[#1a1b1f] rounded-[24px] overflow-hidden border border-white/5 hover:border-blue-500/30 transition-all shadow-xl">
-                                            <div className="aspect-square relative flex items-center justify-center p-4">
-                                                {/* Tool overlay */}
-                                                <div className="absolute top-3 right-3 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                                                    <button className="p-2 bg-black/50 backdrop-blur-md rounded-lg hover:bg-blue-600 text-white"><Maximize2 className="h-4 w-4" /></button>
-                                                    <button onClick={() => removeFile(i)} className="p-2 bg-black/50 backdrop-blur-md rounded-lg hover:bg-red-600 text-white"><X className="h-4 w-4" /></button>
-                                                </div>
-
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img src={previews[i]} alt={file.name} className="max-w-full max-h-full object-contain rounded-lg" />
-                                            </div>
-                                            <div className="px-5 py-4 bg-[#1a1b1f] border-t border-white/5">
-                                                <p className="text-xs font-bold truncate mb-3">{file.name}</p>
-                                                <div className="flex items-center space-x-2">
-                                                    <div className="px-2 py-1 bg-white/5 rounded text-[10px] font-bold text-gray-500">Original</div>
-                                                    <ArrowRight className="h-3 w-3 text-gray-600" />
-                                                    <div className="px-2 py-1 bg-blue-500/10 rounded text-[10px] font-black text-blue-500">{width} × {height}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[24px] hover:border-blue-500/30 hover:bg-blue-500/5 transition-all cursor-pointer group">
-                                        <input type="file" multiple accept="image/*" onChange={handleFileSelect} className="hidden" />
-                                        <div className="p-5 bg-[#1a1b1f] rounded-2xl mb-4 group-hover:scale-110 transition-transform">
-                                            <Plus className="h-6 w-6 text-gray-500" />
-                                        </div>
-                                        <span className="text-xs font-bold text-gray-500">Add more</span>
-                                    </label>
-                                </div>
                             </div>
-                        </>
-                    ) : (
-                        <div className="flex-1 flex items-center justify-center p-8">
-                            <div className="max-w-md w-full bg-[#1a1b1f] rounded-[32px] p-12 border border-white/5 text-center">
-                                {uploading ? (
-                                    <div className="space-y-8">
-                                        <div className="relative inline-block">
-                                            <div className="h-32 w-32 rounded-full border-4 border-white/5 border-t-blue-500 animate-spin"></div>
-                                            <div className="absolute inset-0 flex items-center justify-center text-xl font-black text-blue-500">{progress}%</div>
-                                        </div>
-                                        <div>
-                                            <h3 className="text-2xl font-bold mb-2 uppercase tracking-tight">{jobStatus?.toLowerCase().replace('_', ' ') || 'Resizing'}</h3>
-                                            <p className="text-gray-500 text-sm">Please hold on while we process your images.</p>
-                                        </div>
-                                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                                            <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${progress}%` }}></div>
-                                        </div>
-                                    </div>
-                                ) : downloadUrls.length > 0 ? (
-                                    <div className="space-y-8 animate-in zoom-in duration-300">
-                                        <div className="h-24 w-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                                            <CheckCircle2 className="h-12 w-12 text-green-500" />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-3xl font-black mb-2 tracking-tight">Success!</h3>
-                                            <p className="text-gray-500">All images have been resized successfully.</p>
-                                        </div>
-                                        <div className="space-y-3 pt-4">
-                                            {downloadUrls.map((file, i) => (
-                                                <a
-                                                    key={i}
-                                                    href={file.url}
-                                                    download={file.name}
-                                                    className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-all border border-transparent hover:border-blue-500/30"
-                                                >
-                                                    <span className="text-sm font-bold truncate pr-4">{file.name}</span>
-                                                    <Download className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                                                </a>
-                                            ))}
-                                            <button
-                                                onClick={() => {
-                                                    setStep('upload');
-                                                    setFiles([]);
-                                                    setDownloadUrls([]);
-                                                    setError(null);
-                                                }}
-                                                className="block w-full text-center text-gray-500 text-xs font-bold uppercase tracking-widest mt-8 hover:text-white transition-colors"
-                                            >
-                                                Resize more images
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : error ? (
-                                    <div className="space-y-6">
-                                        <AlertCircle className="h-16 w-16 text-red-500 mx-auto" />
-                                        <p className="text-red-400 font-bold">{error}</p>
-                                        <button onClick={() => setStep('settings')} className="text-blue-500 font-bold">Try again</button>
-                                    </div>
-                                ) : null}
-                            </div>
-                        </div>
-                    )}
-                </main>
+                        ) : null}
+                    </div>
+                )}
             </div>
-
-            <style jsx global>{`
-                ::-webkit-scrollbar {
-                    width: 6px;
-                }
-                ::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background: rgba(255, 255, 255, 0.05);
-                    border-radius: 10px;
-                }
-                ::-webkit-scrollbar-thumb:hover {
-                    background: rgba(255, 255, 255, 0.1);
-                }
-            `}</style>
         </div>
     );
 }

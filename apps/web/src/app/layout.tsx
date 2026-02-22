@@ -12,6 +12,10 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 export const metadata: Metadata = {
   title: "Daiwanmaru - Tools, Education, Artworks & More",
   description: "Explore Daiwanmaru Tools, technical education, creative artworks, and innovative products.",
+  icons: {
+    icon: "/logo-icon.png",
+    apple: "/logo-icon.png",
+  },
 };
 
 export default function RootLayout({

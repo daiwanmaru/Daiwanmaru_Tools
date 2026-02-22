@@ -25,12 +25,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 export default function PdfMergePage() {
-    const { data: session, status } = useSession({
-        required: true,
-        onUnauthenticated() {
-            redirect('/login');
-        },
-    });
+    const { data: session, status } = useSession();
 
     const [step, setStep] = useState<'upload' | 'edit' | 'processing'>('upload');
     const [files, setFiles] = useState<File[]>([]);
@@ -188,13 +183,15 @@ export default function PdfMergePage() {
                 <nav className="flex items-center space-x-2 text-xs font-medium text-neutral-400 mb-8">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
                     <ChevronRight className="h-3 w-3" />
+                    <Link href="/tools" className="hover:text-blue-600 transition-colors">Tools</Link>
+                    <ChevronRight className="h-3 w-3" />
                     <span className="text-neutral-600">PDF Merge</span>
                 </nav>
 
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-black text-neutral-900 tracking-tight mb-4">PDF Merge & 合併 PDF</h1>
-                    <p className="text-neutral-500 max-w-xl mx-auto">
-                        Merge multiple PDFs and images into a single professional document.
+                    <p className="text-neutral-500 max-w-xl mx-auto uppercase tracking-[0.2em] text-[10px] font-bold">
+                        Professional document management utilities.
                     </p>
                 </div>
 

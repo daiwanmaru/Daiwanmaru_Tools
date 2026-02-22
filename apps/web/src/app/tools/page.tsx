@@ -11,12 +11,18 @@ interface Tool {
     category: string;
 }
 
-export default async function ToolsPage() {
+export default async function ToolsPage(props: { searchParams?: Promise<{ category?: string }> }) {
+    const searchParams = await props.searchParams;
+    const activeCategory = searchParams?.category;
+
     let tools: Tool[] = [];
     let error: string | null = null;
 
     try {
         tools = (await getAllTools()) as Tool[];
+        if (activeCategory) {
+            tools = tools.filter(t => t.category === activeCategory);
+        }
     } catch (err) {
         console.error('Failed to fetch tools:', err);
         error = err instanceof Error ? err.message : 'Unknown error';
