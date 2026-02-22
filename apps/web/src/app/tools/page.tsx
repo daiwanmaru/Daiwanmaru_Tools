@@ -3,12 +3,20 @@ import { getAllTools } from '@daiwanmaru/core';
 
 export const dynamic = 'force-dynamic';
 
+interface Tool {
+    id: string;
+    slug: string;
+    name: string;
+    description: string | null;
+    category: string;
+}
+
 export default async function ToolsPage() {
-    let tools = [];
+    let tools: Tool[] = [];
     let error: string | null = null;
 
     try {
-        tools = await getAllTools();
+        tools = (await getAllTools()) as Tool[];
     } catch (err) {
         console.error('Failed to fetch tools:', err);
         error = err instanceof Error ? err.message : 'Unknown error';
