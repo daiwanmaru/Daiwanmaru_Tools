@@ -2,55 +2,58 @@
 
 import { PageShell } from '@/components/PageShell';
 
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
+
 export default function ArtworksPage() {
-    const works = [
-        { title: 'Neon Reflections', artist: 'Daiwan-kun', year: '2026', image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop' },
-        { title: 'The Sound of Silence', artist: 'Virtual Soul', year: '2025', image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1000&auto=format&fit=crop' },
-        { title: 'Digital Fragments', artist: 'MIOW', year: '2026', image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1000&auto=format&fit=crop' },
+    const categories = [
+        {
+            title: 'Illustration',
+            href: '/artworks/illustration',
+            description: 'Digital paintings and character designs.',
+            count: '0 Works'
+        },
+        {
+            title: 'Music & Audio',
+            href: '/artworks/music',
+            description: 'Sonic landscapes and virtual performances.',
+            count: '0 Tracks'
+        },
+        {
+            title: 'Visual Artist',
+            href: '/artworks/visual-artist',
+            description: 'Representing the new generation of creators.',
+            count: '1 Artist'
+        },
     ];
 
     return (
         <PageShell
             category="Creative Exhibit"
             title="Artworks"
-            subtitle="A curated gallery of visual, audio, and video creations. Home of the virtual artist project."
+            subtitle="A curated gallery of visual, audio, and video creations."
         >
-            <div className="space-y-32">
-                {works.map((work, index) => (
-                    <div key={work.title} className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 items-center group`}>
-                        <div className="flex-1 overflow-hidden border border-slate-100">
-                            <img
-                                src={work.image}
-                                alt={work.title}
-                                className="w-full aspect-[4/5] object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
-                            />
-                        </div>
-                        <div className="flex-1 space-y-6">
-                            <div className="flex items-center space-x-3">
-                                <span className="text-[10px] tracking-[.3em] font-bold text-slate-400 uppercase">Collection 0{index + 1}</span>
-                            </div>
-                            <h2 className="text-4xl md:text-5xl font-medium serif text-slate-900 leading-tight">
-                                {work.title}
-                            </h2>
-                            <div className="pt-6 border-t border-slate-100 grid grid-cols-2 gap-8 text-[10px] tracking-widest uppercase text-slate-500 font-bold">
-                                <div>
-                                    <span className="block text-slate-300 mb-1 font-normal tracking-editorial">Artist</span>
-                                    {work.artist}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                {categories.map((cat) => (
+                    <Link key={cat.title} href={cat.href} className="group block h-full">
+                        <div className="border border-slate-100 p-12 hover:border-blue-600 transition-all duration-500 rounded-[2rem] bg-white h-full flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-8">
+                                    <span className="text-[10px] tracking-[.4em] font-bold text-blue-600 uppercase">Collection</span>
+                                    <span className="text-[10px] tracking-[.3em] font-bold text-slate-300 uppercase">{cat.count}</span>
                                 </div>
-                                <div>
-                                    <span className="block text-slate-300 mb-1 font-normal tracking-editorial">Year</span>
-                                    {work.year}
-                                </div>
+                                <h3 className="text-3xl font-medium serif text-slate-900 mb-6 group-hover:text-blue-600 transition-colors">
+                                    {cat.title}
+                                </h3>
+                                <p className="text-slate-500 text-xs font-light leading-relaxed mb-12">
+                                    {cat.description}
+                                </p>
                             </div>
-                            <p className="text-slate-500 font-light leading-relaxed pt-6">
-                                An exploration into the relationship between organic forms and digital
-                                processing. This piece represents the evolution of our virtual identity.
-                            </p>
-                            <button className="text-[10px] tracking-[.4em] font-bold text-slate-900 uppercase pt-4 hover:text-blue-600 transition-colors">
-                                View Details +
-                            </button>
+                            <div className="flex items-center text-[10px] tracking-[.4em] font-bold text-slate-900 uppercase group-hover:translate-x-2 transition-transform">
+                                View Gallery <ChevronRight className="ml-2 h-3 w-3" />
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </PageShell>
