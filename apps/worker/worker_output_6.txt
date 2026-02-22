@@ -1,0 +1,3 @@
+[Worker] Worker started. Polling for jobs...
+[Worker] Queue Key: job_queue
+^C

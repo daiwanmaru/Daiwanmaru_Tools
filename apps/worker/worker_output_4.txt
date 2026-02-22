@@ -28,3 +28,8 @@
 [Worker] Uploading 1 outputs...
 [Worker] Uploading C:\Users\USER\AppData\Local\Temp\job-3552b106-c54a-4d64-9964-ede97ec68bc7\0-ChatGPT Image Feb 21, 2026, 01_07_23 PM-resized.png to jobs/3552b106-c54a-4d64-9964-ede97ec68bc7/outputs/0-ChatGPT Image Feb 21, 2026, 01_07_23 PM-resized.png...
 [Worker] Job 3552b106-c54a-4d64-9964-ede97ec68bc7 finished successfully
+[Worker] Found Job: f2d0f500-cc85-4f07-9c10-2847310e7dbd
+[Worker] Processing Job: f2d0f500-cc85-4f07-9c10-2847310e7dbd
+[Worker] Job f2d0f500-cc85-4f07-9c10-2847310e7dbd error: Error: No processor for tool pdf-converter
+    at processJob (C:\dev\daiwanmaru_tools\monorepo\apps\worker\src\index.ts:91:31)
+    at async start (C:\dev\daiwanmaru_tools\monorepo\apps\worker\src\index.ts:208:17)

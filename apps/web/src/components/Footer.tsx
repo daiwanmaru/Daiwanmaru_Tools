@@ -1,60 +1,48 @@
 'use client';
 
-import { Twitter, Instagram, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
     return (
-        <footer className="bg-white border-t border-gray-100 py-12">
+        <footer className="bg-white border-t border-slate-100 py-20 mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <div className="mb-8 md:mb-0">
-                        <Link href="/" className="flex items-center space-x-2 group">
-                            <img src="/logo-icon.png" alt="Daiwanmaru Icon" className="h-8 w-auto opacity-80 group-hover:opacity-100 transition-opacity" />
-                            <img src="/logo-text.png" alt="Daiwanmaru Tool" className="h-5 w-auto" />
+                <div className="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0 text-center md:text-left">
+                    <div className="max-w-xs">
+                        <Link href="/" className="inline-block mb-4">
+                            <h2 className="text-3xl font-medium text-slate-900 serif">Daiwanmaru</h2>
                         </Link>
-                        <p className="mt-2 text-sm text-gray-500">© 2026 Daiwanmaru Tools. All rights reserved.</p>
-                        <div className="mt-4 flex space-x-4 text-xs font-medium text-gray-400">
-                            <Link href="/terms" className="hover:text-gray-600 transition-colors">Terms of Service</Link>
-                            <span className="text-gray-200">|</span>
-                            <Link href="/privacy" className="hover:text-gray-600 transition-colors">Privacy Policy</Link>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col items-end space-y-4">
-                        <div className="flex space-x-6">
-                            <a
-                                href="https://x.com/daiwanmaru"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-blue-400 transition-colors"
-                            >
-                                <span className="sr-only">X (Twitter)</span>
-                                <Twitter className="h-6 w-6" />
-                            </a>
-                            <a
-                                href="https://www.instagram.com/daiwanmaru/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-pink-500 transition-colors"
-                            >
-                                <span className="sr-only">Instagram</span>
-                                <Instagram className="h-6 w-6" />
-                            </a>
-                            <a
-                                href="https://www.threads.com/@daiwanmaru"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-black transition-colors"
-                            >
-                                <span className="sr-only">Threads</span>
-                                <MessageCircle className="h-6 w-6" />
-                            </a>
-                        </div>
-                        <p className="text-[10px] text-gray-300 italic max-w-[200px] text-right">
-                            This site uses cookies for analytics and personalized ads via Google.
+                        <p className="text-[11px] tracking-[.2em] text-slate-400 leading-relaxed uppercase">
+                            Empowering creativity through technology and design.
                         </p>
                     </div>
+
+                    <div className="flex items-center space-x-12">
+                        <div className="flex flex-col space-y-4">
+                            <h4 className="text-[10px] tracking-[.4em] font-bold text-slate-900 uppercase">Explore</h4>
+                            <div className="flex flex-col space-y-2 text-[11px] text-slate-500 uppercase tracking-widest">
+                                <Link href="/tools" className="hover:text-blue-600 transition-colors">Tools</Link>
+                                <Link href="/education" className="hover:text-blue-600 transition-colors">Education</Link>
+                                <Link href="/artworks" className="hover:text-blue-600 transition-colors">Artworks</Link>
+                            </div>
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                            <h4 className="text-[10px] tracking-[.4em] font-bold text-slate-900 uppercase">Legal</h4>
+                            <div className="flex flex-col space-y-2 text-[11px] text-slate-500 uppercase tracking-widest">
+                                <Link href="/terms" className="hover:text-blue-600 transition-colors">Terms</Link>
+                                <Link href="/privacy" className="hover:text-blue-600 transition-colors">Privacy</Link>
+                                <Link href="/contact" className="hover:text-blue-600 transition-colors">Support</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-20 pt-8 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <p className="text-[10px] tracking-widest text-slate-400 uppercase">
+                        © 2026 Daiwanmaru. All rights reserved.
+                    </p>
+                    <p className="text-[9px] tracking-[.3em] text-slate-300 italic uppercase">
+                        Everything is Creative.
+                    </p>
                 </div>
             </div>
         </footer>
